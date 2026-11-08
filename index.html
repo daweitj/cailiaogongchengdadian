@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中国材料工程大典</title>
+<style>
+  :root{
+    --paper:#f6f4ee;
+    --ink:#1f2b2a;
+    --muted:#4e5958;
+    --line:#dcd8cd;
+    --accent:#0f6a60;
+    --accent-soft:#e2ece9;
+    --accent-deep:#0b554d;
+    --card:#fffdf8;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:56px 24px 72px}
+
+  /* ========== 首屏视觉区 ========== */
+  header{
+    border-bottom:1px solid var(--line);
+    padding-bottom:28px;margin-bottom:8px;
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:20px 32px;
+    align-items:start;
+  }
+  .hero-text{min-width:0}
+  .eyebrow{font-size:13px;letter-spacing:.22em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+  h1{
+    font-family:"Songti SC","SimSun","Source Han Serif SC",serif;
+    font-size:clamp(30px,5vw,46px);
+    line-height:1.2;margin:0 0 14px;font-weight:600;letter-spacing:.02em;
+  }
+  .sub{color:var(--muted);font-size:15px;line-height:1.8;margin:0}
+
+  /* 首屏徽章：书卷+卷数视觉锚点 */
+  .hero-badge{
+    flex:none;
+    width:108px;height:108px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--accent) 0%,var(--accent-deep) 100%);
+    color:#fff;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    position:relative;
+    box-shadow:0 6px 20px rgba(15,106,96,.18);
+  }
+  .hero-badge::before{
+    content:"";position:absolute;inset:6px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.25);
+  }
+  .hero-badge .num{
+    font-family:"Songti SC","SimSun",serif;
+    font-size:34px;font-weight:700;line-height:1;letter-spacing:.02em;
+  }
+  .hero-badge .label{font-size:11px;letter-spacing:.18em;margin-top:4px;opacity:.9}
+
+  .intro{
+    margin:26px 0 6px;padding:22px 24px;background:var(--card);
+    border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;
+  }
+  .intro h2{
+    font-family:"Songti SC","SimSun",serif;font-size:17px;font-weight:600;
+    margin:0 0 12px;letter-spacing:.04em;
+  }
+  .intro p{font-size:14.5px;line-height:2;color:#3a4744;margin:0 0 10px;text-align:justify}
+  .intro .src{font-size:12.5px;color:var(--muted);line-height:1.8;margin:14px 0 0}
+  .intro .src a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+  .list{display:flex;flex-direction:column;gap:8px}
+  .row{
+    display:grid;
+    grid-template-columns:56px 1fr auto auto;
+    align-items:center;gap:16px;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 18px;
+    transition:border-color .15s,box-shadow .15s,transform .15s;
+  }
+  .row:hover{border-color:#c9c4b6;box-shadow:0 2px 10px rgba(31,43,42,.05)}
+  .vol{
+    font-family:"Songti SC","SimSun",serif;
+    font-size:15px;color:var(--accent);background:var(--accent-soft);
+    border-radius:8px;text-align:center;padding:5px 0;font-weight:600;white-space:nowrap;
+  }
+  .name{min-width:0}
+  .name a{color:var(--ink);text-decoration:none;font-size:16px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:color .15s}
+  .name a:hover{color:var(--accent)}
+  .meta{font-size:12px;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .size{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .open{
+    background:var(--accent);color:#fff;border:0;border-radius:9px;
+    padding:9px 16px;font-size:14px;text-decoration:none;white-space:nowrap;
+    display:inline-block;font-family:inherit;
+    transition:background .15s,transform .15s;
+  }
+  .open:hover{background:#0b5750}
+
+  /* ========== 键盘焦点可见（A11Y-FOCUS 修复） ========== */
+  a:focus-visible,
+  button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:6px;
+  }
+  .open:focus-visible{outline-offset:3px;border-radius:9px}
+
+  /* ========== 减少动效适配（MOTION-A11Y 修复） ========== */
+  @media (prefers-reduced-motion: reduce){
+    *{
+      animation-duration:.001ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:.001ms !important;
+      scroll-behavior:auto !important;
+    }
+  }
+
+  /* ========== noscript 兜底样式 ========== */
+  .noscript-notice{
+    margin:16px 0 0;padding:16px 20px;background:#fff3e0;
+    border:1px solid #e8c9a0;border-left:3px solid #c77700;border-radius:10px;
+    color:#5c3d00;font-size:14px;line-height:1.8;grid-column:1/-1;
+  }
+  .noscript-notice strong{color:#8b4500}
+  .noscript-list{margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+  .noscript-list li{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 18px;display:flex;gap:14px;align-items:center;font-size:14.5px;
+  }
+  .noscript-list .n-vol{
+    font-family:"Songti SC",serif;color:var(--accent);background:var(--accent-soft);
+    border-radius:8px;padding:4px 10px;font-weight:600;flex:none;
+  }
+  .noscript-list .n-title{flex:1;color:var(--ink)}
+  .noscript-list .n-link{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft);white-space:nowrap}
+
+  @media (max-width:640px){
+    header{grid-template-columns:1fr}
+    .hero-badge{width:80px;height:80px;margin-bottom:4px}
+    .hero-badge .num{font-size:26px}
+    .row{grid-template-columns:48px 1fr auto;row-gap:8px}
+    .size{display:none}
+    .open{grid-column:3;grid-row:1/3}
+    .wrap{padding:36px 16px 56px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="hero-text">
+      <div class="eyebrow">China Materials Engineering Canon</div>
+      <h1>中国材料工程大典</h1>
+      <p class="sub">全套 26 卷 PDF，逐卷独立分享链接，点开即可转存下载</p>
+    </div>
+    <!-- 首屏视觉徽章：形成明确视觉焦点 -->
+    <div class="hero-badge" aria-hidden="true">
+      <span class="num">26</span>
+      <span class="label">卷 · 全书</span>
+    </div>
+
+    <!-- 无 JS 兜底：关键内容在禁用脚本时仍可访问 -->
+    <noscript>
+      <div class="noscript-notice">
+        <strong>提示：</strong>当前页面已禁用 JavaScript，但所有下载链接已完整列出，可直接点击「百度网盘」打开对应卷。
+      </div>
+      <ul class="noscript-list">
+        <li><span class="n-vol">1</span><span class="n-title">材料工程基础</span><a class="n-link" href="https://pan.baidu.com/s/1Cd3ULotJP6DOw0Nl5XDgeg?pwd=fc21" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">2</span><span class="n-title">钢铁材料工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/17a0nFoynLTiV-GkwaON2_A?pwd=sbve" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">3</span><span class="n-title">钢铁材料工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1GMmi2q52ldKBXcDDMaVl5A?pwd=sg76" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">4</span><span class="n-title">有色金属材料工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/179eLuQAAi4WJC00wx2X0tw?pwd=7gfe" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">5</span><span class="n-title">有色金属材料工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/10ZuZdybFrZLOCthPcbjDNQ?pwd=yxf2" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">6</span><span class="n-title">高分子材料工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1k6XdWxtFWglM3E9mvNm-ag?pwd=ttke" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">7</span><span class="n-title">高分子材料工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/15MHAmvaR0xYP-oQDrkJmgQ?pwd=awmw" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">8</span><span class="n-title">无机非金属材料工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1xVgJjkLwIvh40xXhGnK-XA?pwd=dw1k" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">9</span><span class="n-title">无机非金属材料工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1dmd2aw5ErIdX8wKHhgNuOA?pwd=g5tk" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">10</span><span class="n-title">复合材料工程</span><a class="n-link" href="https://pan.baidu.com/s/1sMR6za3ma2Mp_H-bCuD-EA?pwd=eq61" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">11</span><span class="n-title">信息功能材料工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1Xr8JMoWh3X0QFFMQNwPA_Q?pwd=gbiy" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">12</span><span class="n-title">信息功能材料工程（中）</span><a class="n-link" href="https://pan.baidu.com/s/1fUaTlETxrBTJ5UB86dLn1w?pwd=2mp5" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">13</span><span class="n-title">信息功能材料工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1AA9N5xjFitQWJkxRjzZKLg?pwd=qqnf" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">14</span><span class="n-title">粉末冶金材料工程</span><a class="n-link" href="https://pan.baidu.com/s/1KwjsaCJKP1AXvgvI2CJaJA?pwd=pbdz" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">15</span><span class="n-title">材料热处理工程</span><a class="n-link" href="https://pan.baidu.com/s/1ADCFTgE37117RlrSY3aTfQ?pwd=cpvx" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">16</span><span class="n-title">材料表面工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1XtCmG44pWiIP-vStPJIhvA?pwd=c67e" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">17</span><span class="n-title">材料表面工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1cTlXU1JbWUcv56TaQks-fA?pwd=y2dj" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">18</span><span class="n-title">材料铸造成形工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/15DrdnoSF25B54V1kTTNqeg?pwd=dpa1" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">19</span><span class="n-title">材料铸造成形工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1uqXE9Kd3KlJuEVcU4Ykbpw?pwd=nh6d" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">20</span><span class="n-title">材料塑性成形工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1yOGJC69xYtE1e95YM2reww?pwd=rqs4" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">21</span><span class="n-title">材料塑性成形工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1E7JwoHYJuULmR5roQY_Srg?pwd=si13" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">22</span><span class="n-title">材料焊接工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/12XuvoKqx1sFvgVpj2KgcIg?pwd=9tmm" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">23</span><span class="n-title">材料焊接工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1RnVI7XlreECuTrLW1TKFKw?pwd=h6sm" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">24</span><span class="n-title">材料特种加工成形工程（上）</span><a class="n-link" href="https://pan.baidu.com/s/1PRiD7ovidA5NcIItNBJpYA?pwd=6gmy" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">25</span><span class="n-title">材料特种加工成形工程（下）</span><a class="n-link" href="https://pan.baidu.com/s/1rbXiJ9uCLyc_-Xrs-71TGg?pwd=2qdf" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+        <li><span class="n-vol">26</span><span class="n-title">材料表征与检测技术</span><a class="n-link" href="https://pan.baidu.com/s/1oOYtSwSUVkAWZMV_PevSww?pwd=bbda" target="_blank" rel="noopener">百度网盘 ↗</a></li>
+      </ul>
+    </noscript>
+  </header>
+  <section class="intro">
+    <h2>丛书简介</h2>
+    <p>《中国材料工程大典》是一部关于材料制备与测试、材料成形与加工工程的大型专业工具书，由化学工业出版社自 2006 年起陆续出版，全书共 26 卷、近 7000 万字，是我国规模最大、内容最全面的材料工程工具书之一。</p>
+    <p>这套书由中国机械工程学会、中国材料研究学会组织编写，中国科学院路甬祥院长担任编委会主任，师昌绪院士等任顾问，39 位院士与 1200 余位专家教授共同执笔；中国金属学会、中国化工学会、中国硅酸盐学会、中国有色金属学会、中国复合材料学会等参与编写，并得到科技部、国防科工委、国家自然科学基金委员会、中国科协的支持。</p>
+    <p>全书按材料门类与工程环节分卷：第 1 卷为材料工程基础，第 2—5 卷覆盖钢铁与有色金属材料，第 6—9 卷为高分子与无机非金属材料，第 10 卷为复合材料，第 11—13 卷为信息功能材料，第 14 卷粉末冶金，第 15 卷热处理，第 16—17 卷表面工程，第 18—25 卷依次为铸造、塑性成形、焊接、特种加工成形，第 26 卷为材料表征与检测技术。既汇总了材料工程的最新数据与工艺，也兼顾基础理论与生产实践，适合材料、机械、冶金等领域的科研人员、工程师与高校师生查阅。</p>
+    <p class="src">以上简介依据豆瓣读书「中国材料工程大典」丛书页说明整理： <a href="https://book.douban.com/series/59315" target="_blank" rel="noopener">book.douban.com/series/59315</a></p>
+    <p class="src" style="margin-top:8px">本页不存储任何文件，所有内容的版权归原出版方及作者所有，仅供个人学习检索之用；如有侵权，请联系删除。</p>
+  </section>
+  <main class="list" id="list"></main>
+</div>
+
+<script>
+const BOOKS = [
+  {"vol":"1","title":"材料工程基础","file":"中国材料工程大典.第1卷.材料工程基础.pdf","size":"121.7 MB","url":"https://pan.baidu.com/s/1Cd3ULotJP6DOw0Nl5XDgeg?pwd=fc21"},
+  {"vol":"2","title":"钢铁材料工程（上）","file":"中国材料工程大典.第2卷.钢铁材料工程.(上).pdf","size":"138.1 MB","url":"https://pan.baidu.com/s/17a0nFoynLTiV-GkwaON2_A?pwd=sbve"},
+  {"vol":"3","title":"钢铁材料工程（下）","file":"中国材料工程大典.第3卷.钢铁材料工程.(下).pdf","size":"92.9 MB","url":"https://pan.baidu.com/s/1GMmi2q52ldKBXcDDMaVl5A?pwd=sg76"},
+  {"vol":"4","title":"有色金属材料工程（上）","file":"中国材料工程大典.第4卷.有色金属材料工程.(上).pdf","size":"81.9 MB","url":"https://pan.baidu.com/s/179eLuQAAi4WJC00wx2X0tw?pwd=7gfe"},
+  {"vol":"5","title":"有色金属材料工程（下）","file":"中国材料工程大典.第5卷.有色金属材料工程.(下).pdf","size":"104.4 MB","url":"https://pan.baidu.com/s/10ZuZdybFrZLOCthPcbjDNQ?pwd=yxf2"},
+  {"vol":"6","title":"高分子材料工程（上）","file":"中国材料工程大典.第6卷.高分子材料工程.(上).pdf","size":"109.2 MB","url":"https://pan.baidu.com/s/1k6XdWxtFWglM3E9mvNm-ag?pwd=ttke"},
+  {"vol":"7","title":"高分子材料工程（下）","file":"中国材料工程大典.第7卷.高分子材料工程.(下).pdf","size":"95.1 MB","url":"https://pan.baidu.com/s/15MHAmvaR0xYP-oQDrkJmgQ?pwd=awmw"},
+  {"vol":"8","title":"无机非金属材料工程（上）","file":"中国材料工程大典.第8卷.无机非金属材料工程.(上).pdf","size":"158 MB","url":"https://pan.baidu.com/s/1xVgJjkLwIvh40xXhGnK-XA?pwd=dw1k"},
+  {"vol":"9","title":"无机非金属材料工程（下）","file":"中国材料工程大典.第9卷.无机非金属材料工程.(下).pdf","size":"129.5 MB","url":"https://pan.baidu.com/s/1dmd2aw5ErIdX8wKHhgNuOA?pwd=g5tk"},
+  {"vol":"10","title":"复合材料工程","file":"中国材料工程大典.第10卷.复合材料工程.pdf","size":"193.1 MB","url":"https://pan.baidu.com/s/1sMR6za3ma2Mp_H-bCuD-EA?pwd=eq61"},
+  {"vol":"11","title":"信息功能材料工程（上）","file":"中国材料工程大典.第11卷.信息功能材料工程.(上).pdf","size":"167.5 MB","url":"https://pan.baidu.com/s/1Xr8JMoWh3X0QFFMQNwPA_Q?pwd=gbiy"},
+  {"vol":"12","title":"信息功能材料工程（中）","file":"中国材料工程大典.第12卷.信息功能材料工程.(中).pdf","size":"172.6 MB","url":"https://pan.baidu.com/s/1fUaTlETxrBTJ5UB86dLn1w?pwd=2mp5"},
+  {"vol":"13","title":"信息功能材料工程（下）","file":"中国材料工程大典.第13卷.信息功能材料工程.(下).pdf","size":"176.3 MB","url":"https://pan.baidu.com/s/1AA9N5xjFitQWJkxRjzZKLg?pwd=qqnf"},
+  {"vol":"14","title":"粉末冶金材料工程","file":"中国材料工程大典.第14卷.粉末冶金材料工程.pdf","size":"222.9 MB","url":"https://pan.baidu.com/s/1KwjsaCJKP1AXvgvI2CJaJA?pwd=pbdz"},
+  {"vol":"15","title":"材料热处理工程","file":"中国材料工程大典.第15卷.材料热处理工程.pdf","size":"115 MB","url":"https://pan.baidu.com/s/1ADCFTgE37117RlrSY3aTfQ?pwd=cpvx"},
+  {"vol":"16","title":"材料表面工程（上）","file":"中国材料工程大典.第16卷.材料表面工程.(上).pdf","size":"98.2 MB","url":"https://pan.baidu.com/s/1XtCmG44pWiIP-vStPJIhvA?pwd=c67e"},
+  {"vol":"17","title":"材料表面工程（下）","file":"中国材料工程大典.第17卷.材料表面工程.(下).pdf","size":"112.3 MB","url":"https://pan.baidu.com/s/1cTlXU1JbWUcv56TaQks-fA?pwd=y2dj"},
+  {"vol":"18","title":"材料铸造成形工程（上）","file":"中国材料工程大典.第18卷.材料铸造成形工程.(上).pdf","size":"130.3 MB","url":"https://pan.baidu.com/s/15DrdnoSF25B54V1kTTNqeg?pwd=dpa1"},
+  {"vol":"19","title":"材料铸造成形工程（下）","file":"中国材料工程大典.第19卷.材料铸造成形工程.(下).pdf","size":"78.2 MB","url":"https://pan.baidu.com/s/1uqXE9Kd3KlJuEVcU4Ykbpw?pwd=nh6d"},
+  {"vol":"20","title":"材料塑性成形工程（上）","file":"中国材料工程大典.第20卷.材料塑性成形工程.(上).pdf","size":"40.1 MB","url":"https://pan.baidu.com/s/1yOGJC69xYtE1e95YM2reww?pwd=rqs4"},
+  {"vol":"21","title":"材料塑性成形工程（下）","file":"中国材料工程大典.第21卷.材料塑性成形工程.(下).pdf","size":"113.2 MB","url":"https://pan.baidu.com/s/1E7JwoHYJuULmR5roQY_Srg?pwd=si13"},
+  {"vol":"22","title":"材料焊接工程（上）","file":"中国材料工程大典.第22卷.材料焊接工程.(上).pdf","size":"169 MB","url":"https://pan.baidu.com/s/12XuvoKqx1sFvgVpj2KgcIg?pwd=9tmm"},
+  {"vol":"23","title":"材料焊接工程（下）","file":"中国材料工程大典.第23卷.材料焊接工程.(下).pdf","size":"168.6 MB","url":"https://pan.baidu.com/s/1RnVI7XlreECuTrLW1TKFKw?pwd=h6sm"},
+  {"vol":"24","title":"材料特种加工成形工程（上）","file":"中国材料工程大典.第24卷.材料特种加工成形工程.(上).pdf","size":"97.2 MB","url":"https://pan.baidu.com/s/1PRiD7ovidA5NcIItNBJpYA?pwd=6gmy"},
+  {"vol":"25","title":"材料特种加工成形工程（下）","file":"中国材料工程大典.第25卷.材料特种加工成形工程.(下).pdf","size":"146.4 MB","url":"https://pan.baidu.com/s/1rbXiJ9uCLyc_-Xrs-71TGg?pwd=2qdf"},
+  {"vol":"26","title":"材料表征与检测技术","file":"中国材料工程大典.第26卷.材料表征与检测技术.pdf","size":"171.3 MB","url":"https://pan.baidu.com/s/1oOYtSwSUVkAWZMV_PevSww?pwd=bbda"}
+];
+
+const list = document.getElementById('list');
+
+function render(items){
+  list.innerHTML = items.map(b => `
+    <div class="row">
+      <div class="vol">${b.vol}</div>
+      <div class="name">
+        <a href="${b.url}" target="_blank" rel="noopener" title="${b.file}">${b.title}</a>
+        <div class="meta">${b.file}</div>
+      </div>
+      <div class="size">${b.size}</div>
+      <a class="open" href="${b.url}" target="_blank" rel="noopener">百度网盘</a>
+    </div>`).join('');
+}
+
+render(BOOKS);
+</script>
+</body>
+</html>
